@@ -74,3 +74,62 @@ CustomerDao customerDao=new CustomerImpl();
 	}
 
 }
+
+-------------------------------------------------------------
+
+
+import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import com.danske.banking.dao.CustomerImpl;
+import com.danske.banking.models.Customer;
+
+public class StreamDemo {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+		List<Customer> customers=new CustomerImpl().getCustomers();
+		//all the customers
+		System.out.println("All Customers");
+		customers.stream().forEach(System.out::println);		
+		//filter the customers based on dob
+		System.out.println("Filter by DOB");
+		customers.stream().filter(c->c.getDob().getYear()>1990)
+		.forEach(System.out::println);		
+		//filter the customers based on dob, print only the name
+		System.out.println("Filter by DOB and Print Only Name");
+		customers.stream().filter(c->c.getDob().getYear()>1990)
+		.map(c->c.getName())
+		.forEach(System.out::println);		
+		//collect filtered data as names and don't print		
+		List<String> customerNames=customers.stream().filter(c->c.getDob().getYear()>1990)
+		.map(c->c.getName()).collect(Collectors.toList());		
+		//array of branch names
+		String[] branchNames= {"Adyar","Velachery","Anna Nagar","ICF"};
+		Arrays.asList(branchNames).stream().sorted(Comparator.reverseOrder()).forEach(System.out::println);
+	
+		//print customer names in alphabetic order after filtering them by dob
+		System.out.println("Filter by DOB, Sort by Name and Print Only Name");
+		customers.stream().filter(c->c.getDob().getYear()>1980)
+		.sorted((c1,c2)->c1.getName().compareTo(c2.getName()))
+		.map(c->c.getName()).forEach(System.out::println);
+		
+		//reducer --- aggregator
+		int[] array = {23,43,56,97,32};
+		System.out.println("Reduce to Sum");
+		//reduce to sum
+	  	  Arrays.stream(array).reduce(Integer::sum).
+	  	  ifPresent(s -> System.out.println(s/array.length));	  
+		//compute the average age of a customer using lambda
+	  	List<LocalDate> dobs =customers.stream().map(c->c.getDob()).collect(Collectors.toList()); 
+	  	
+	  	
+		
+	}
+
+}
+
