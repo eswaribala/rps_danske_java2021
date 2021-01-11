@@ -1,35 +1,25 @@
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+// TODO Auto-generated method stub
 
-import com.danske.banking.models.Customer;
-
-public class CustomerImpl implements CustomerDao{
-
-	@Override
-	public List<Customer> getCustomers() {
-		// TODO Auto-generated method stub
-		return createCustomers();
-	}
-
-	
-	private List<Customer> createCustomers()
-	{
-		List<Customer> customers=new ArrayList<Customer>();
+		CustomerDao customerDao=new CustomerImpl();
 		
-		Customer customer=null;
-		for(int i=0;i<5;i++)
+		List<Customer> customers=customerDao.getCustomers();
+		
+		System.out.println("Before Sorting.....");
+		for(Customer customer:customers)
 		{
-			customer=new Customer(483658+i,"customer"+i,
-					LocalDate.of(1970+new Random().nextInt(30),1+new Random().nextInt(11),
-							1+new Random().nextInt(26)), 
-					99999999+new Random().nextInt(100));
-			customers.add(customer);
-			
+			System.out.println(customer);
 		}
-		return customers;
-	}
-	
-}
+		
+		//sort the customers by dob
+		System.out.println("After Sorting.....");
+		
+		//without lambda expression, sort it		
+		
+		Collections.sort(customers, new CustomerSorter());
+		
+		for(Customer customer:customers)
+		{
+			System.out.println(customer);
+		}
+		
