@@ -1,9 +1,21 @@
 
-// TODO Auto-generated method stub
 
-		CustomerDao customerDao=new CustomerImpl();
-		
-		List<Customer> customers=customerDao.getCustomers();
+import java.util.Comparator;
+
+import com.danske.banking.models.Customer;
+
+public class CustomerSorter implements Comparator<Customer> {
+
+	@Override
+	public int compare(Customer o1, Customer o2) {
+		// TODO Auto-generated method stub
+		return o1.getDob().compareTo(o2.getDob());
+	}
+
+}
+---------------------------------------------------
+CustomerDao customerDao=new CustomerImpl();
+	List<Customer> customers=customerDao.getCustomers();
 		
 		System.out.println("Before Sorting.....");
 		for(Customer customer:customers)
