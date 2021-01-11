@@ -34,4 +34,43 @@ CustomerDao customerDao=new CustomerImpl();
 		{
 			System.out.println(customer);
 		}
+	---------------------------------------------------------
+	
+	public class OTPApp {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+    //lambda expression overriding generate otp
+	 //OTP otp=()->1000+new Random().nextInt(100);
+	 
+	//Existing functional interface
 		
+	Function<Integer,Long> otp=	(data)->1000L+LocalDate.now().getDayOfYear()+
+			LocalTime.now().getSecond()+data;
+		
+	 System.out.println(otp.apply(999));	 
+	 
+	 //compute age	 
+      
+	 BiFunction<LocalDate,LocalDate,Period> computeAge=(p1,p2)->(Period.between(p1, p2));
+	 
+	 System.out.println(computeAge.apply(LocalDate.now(),
+			 new CustomerImpl().getCustomers().get(0).getDob()));
+	 
+	 //Consumer accepts the data and returns nothing
+	 
+	 Consumer<Integer> showCustomers=(id)->{
+		
+		 for(Customer customer : new CustomerImpl().getCustomers())
+		 {
+			 if(customer.getCustomerId()==id)
+			     System.out.println(customer);
+		 }
+	 };
+	 
+	 showCustomers.accept(483660);
+	 
+		
+	}
+
+}
