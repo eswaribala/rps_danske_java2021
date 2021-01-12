@@ -1,3 +1,21 @@
+package com.danske.banking.dao;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.StringTokenizer;
+
+import com.danske.banking.models.Transaction;
+import com.danske.banking.models.TransactionType;
+
 public class ReconcilationImpl implements ReconcilationDao{
 	@Override
 	public boolean createFile(String path,String fileName) {
@@ -59,6 +77,53 @@ public class ReconcilationImpl implements ReconcilationDao{
 		
 		
 		return status;
+	}
+
+	@Override
+	public List<Transaction> readTransaction(String path, String fileName) {
+		// TODO Auto-generated method stub
+		 List<Transaction> transactions=new ArrayList<Transaction>();
+		try {
+			BufferedReader reader=new BufferedReader(new FileReader(path+File.separator+fileName));
+		    String line=null;
+		    StringTokenizer tokenizer=null;
+		    Transaction transaction=null;
+		    int count=0;
+			while((line=reader.readLine())!=null)
+			{
+				count++;
+				if(count>1)
+				{
+				
+				transaction=new Transaction();
+				tokenizer=new StringTokenizer(line,",");	
+				
+				
+				while(tokenizer.hasMoreElements())
+				{
+					transaction.setTransactionId(Long.parseLong(tokenizer.nextElement().toString()));
+					transaction.setAccountNo(Long.parseLong(tokenizer.nextElement().toString()));					
+					transaction.setAmount(Long.parseLong(tokenizer.nextElement().toString()));
+					transaction.setDot(LocalDate.parse(tokenizer.nextElement().toString()));
+					transaction.setType(TransactionType.valueOf(tokenizer.nextElement().toString()));
+			     }
+				
+				transactions.add(transaction);		
+				}
+			}
+		    reader.close();
+		    
+		
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		return transactions;
 	}
 
 }
