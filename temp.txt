@@ -1,30 +1,5 @@
 public class ReconcilationImpl implements ReconcilationDao{
 	@Override
-	public boolean createFile(String path) {
-		// TODO Auto-generated method stub
-		boolean status=false;
-		File file=new File(path);
-		if(file.exists())
-			status=true;
-		else
-		{
-			try {
-				file.createNewFile();
-				status=true;
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				System.out.println(e.getMessage());
-				status=false;
-			}		
-		
-		}	
-		return status;
-	}
-
-}
--------------------------------------------------
-public class ReconcilationImpl implements ReconcilationDao{
-	@Override
 	public boolean createFile(String path,String fileName) {
 		// TODO Auto-generated method stub
 		boolean status=false;
@@ -41,6 +16,14 @@ public class ReconcilationImpl implements ReconcilationDao{
 				else
 				{
 					file.createNewFile();
+					BufferedWriter writer=new 
+							BufferedWriter(new FileWriter(file,true));
+					writer.write("Transaction Id,");
+					writer.write("Account No,");
+					writer.write("Amount,");
+					writer.write("DOT,");
+					writer.write("Type\n");
+					writer.close();					
 				    status=true;
 				}
 				
@@ -54,6 +37,28 @@ public class ReconcilationImpl implements ReconcilationDao{
 		return status;
 	}
 
+	@Override
+	public boolean writeTransaction(Transaction transaction, String path, String fileName) {
+		// TODO Auto-generated method stub
+		boolean status=false;
+		try {
+			BufferedWriter writer=new 
+					BufferedWriter(new FileWriter(path+File.separator+fileName,true));
+			writer.write(String.valueOf(transaction.getTransactionId())+",");
+			writer.write(String.valueOf(transaction.getAccountNo())+",");
+			writer.write(String.valueOf(transaction.getAmount())+",");
+			writer.write(transaction.getDot().toString()+",");
+			writer.write(transaction.getType().toString()+"\n");
+			writer.close();
+			status=true;
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		return status;
+	}
+
 }
-
-
