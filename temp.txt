@@ -110,4 +110,47 @@ public class StreamDemo {
 -----------------------------------------------
 
 -Djava.util.concurrent.ForkJoinPool.common.parallelism=5
+---------------------------------------------------
+List<Developer>	developers=new DeveloperImpl().getDevelopers();
+	 
+	developers.stream().map(d->d.getLanguages())
+	.flatMap(l->l.stream())
+	.distinct()
+	.forEach(System.out::print);
+	 
+-----------------------------------------------------------------
+public class DeveloperImpl implements DeveloperDao{
 
+	@Override
+	public List<Developer> getDevelopers() {
+		// TODO Auto-generated method stub
+		return createDevelopers();
+	}
+	
+	private List<Developer> createDevelopers()
+	{
+		List<Developer> developers=new ArrayList<Developer>();
+		Set<String> languages=new HashSet<String>();
+		languages.add("Java");
+		languages.add("C#");
+		languages.add("Python");
+		languages.add("AI");
+		Developer developer=new Developer("Arjun",languages);
+		developers.add(developer);
+		languages=new HashSet<String>();
+		languages.add("Java");
+		languages.add("C#");
+		languages.add("Python");
+	    developer=new Developer("Sanjay",languages);
+		developers.add(developer);
+		languages=new HashSet<String>();
+		languages.add("Main Frame");
+		languages.add("C#");
+		languages.add("Machine Learning");
+		languages.add("Devops");
+	    developer=new Developer("Jyoti",languages);
+		developers.add(developer);
+		return developers;
+	}
+
+}
