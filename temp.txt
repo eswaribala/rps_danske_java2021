@@ -22,3 +22,38 @@ public class ReconcilationImpl implements ReconcilationDao{
 	}
 
 }
+-------------------------------------------------
+public class ReconcilationImpl implements ReconcilationDao{
+	@Override
+	public boolean createFile(String path,String fileName) {
+		// TODO Auto-generated method stub
+		boolean status=false;
+		File file=new File(path);
+		if(file.exists())
+			status=true;
+		else
+		{
+			try {
+				file.mkdir();
+				file=new File(path,fileName);
+				if(file.exists())
+					status=true;
+				else
+				{
+					file.createNewFile();
+				    status=true;
+				}
+				
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				System.out.println(e.getMessage());
+				status=false;
+			}		
+		
+		}	
+		return status;
+	}
+
+}
+
+
