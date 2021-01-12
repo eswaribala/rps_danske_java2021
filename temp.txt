@@ -1,92 +1,4 @@
 
-
-import java.util.Comparator;
-
-import com.danske.banking.models.Customer;
-
-public class CustomerSorter implements Comparator<Customer> {
-
-	@Override
-	public int compare(Customer o1, Customer o2) {
-		// TODO Auto-generated method stub
-		return o1.getDob().compareTo(o2.getDob());
-	}
-
-}
----------------------------------------------------
-CustomerDao customerDao=new CustomerImpl();
-	List<Customer> customers=customerDao.getCustomers();
-		
-		System.out.println("Before Sorting.....");
-		for(Customer customer:customers)
-		{
-			System.out.println(customer);
-		}
-		
-		//sort the customers by dob
-		System.out.println("After Sorting.....");
-		
-		//without lambda expression, sort it		
-		
-		Collections.sort(customers, new CustomerSorter());
-		
-		for(Customer customer:customers)
-		{
-			System.out.println(customer);
-		}
-	---------------------------------------------------------
-	
-	public class OTPApp {
-
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-    //lambda expression overriding generate otp
-	 //OTP otp=()->1000+new Random().nextInt(100);
-	 
-	//Existing functional interface
-		
-	Function<Integer,Long> otp=	(data)->1000L+LocalDate.now().getDayOfYear()+
-			LocalTime.now().getSecond()+data;
-		
-	 System.out.println(otp.apply(999));	 
-	 
-	 //compute age	 
-      
-	 BiFunction<LocalDate,LocalDate,Period> computeAge=(p1,p2)->(Period.between(p1, p2));
-	 
-	 System.out.println(computeAge.apply(LocalDate.now(),
-			 new CustomerImpl().getCustomers().get(0).getDob()));
-	 
-	 //Consumer accepts the data and returns nothing
-	 
-	 Consumer<Integer> showCustomers=(id)->{
-		
-		 for(Customer customer : new CustomerImpl().getCustomers())
-		 {
-			 if(customer.getCustomerId()==id)
-			     System.out.println(customer);
-		 }
-	 };
-	 
-	 showCustomers.accept(483660);
-	 
-		
-	}
-
-}
-
--------------------------------------------------------------
-
-
-import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import com.danske.banking.dao.CustomerImpl;
-import com.danske.banking.models.Customer;
-
 public class StreamDemo {
 
 	public static void main(String[] args) {
@@ -125,11 +37,61 @@ public class StreamDemo {
 	  	  Arrays.stream(array).reduce(Integer::sum).
 	  	  ifPresent(s -> System.out.println(s/array.length));	  
 		//compute the average age of a customer using lambda
-	  	List<LocalDate> dobs =customers.stream().map(c->c.getDob()).collect(Collectors.toList()); 
+	  List<Long> ages=customers.stream()
+			  .map(c->ChronoUnit.YEARS.between(c.getDob(),LocalDate.now()))
+			  .collect(Collectors.toList()); 
 	  	
-	  	
+	 System.out.println(ages.stream().mapToLong((x) -> x)
+      .summaryStatistics());  
+	 
+	 //search operation with any match
+	 
+	 System.out.println("Customer Search Any Match"+customers.stream()
+	 .anyMatch(c->c.getName().contains("0")));
+	 
+	 System.out.println("Customer Search All Match"+customers.stream()
+	 .allMatch(c->c.getName().contains("0")));
+	 
+	 Optional<Customer> customer = customers.stream()
+			 .filter(c->c.getDob().getYear()>1990)
+			 .findFirst();
+	 System.out.println("Customer Available"+customer.isPresent());
+	 if(customer.isPresent())
+		 System.out.println(customer);
+	 
+	 //parallelism test
+	 ForkJoinPool commonPool = ForkJoinPool.commonPool();
+	 System.out.println("Parallel"+commonPool.getParallelism());  
+	 
+	 //parallel task
+	 
+	 int size=10000000;
+	 List<UUID> ids=new ArrayList<UUID>(size);
+	 for(int i=0;i<size;i++)
+	 {
+		 ids.add(UUID.randomUUID());
+	 }
+	 /*
+	 System.out.println("Before Sorting.....");
+	 long t0=System.nanoTime();
+	 System.out.println("Nano Time....."+t0);
+	 ids.stream().sorted().count();
+	 System.out.println("After Sorting.....");
+	 long t1=System.nanoTime();
+	 System.out.println("Nano Time....."+t1);
+	 System.out.println("Time Taken to sort"+TimeUnit.NANOSECONDS.toMillis(t1 - t0));
+	 */
+	 
+	 System.out.println("Before Parallel Sorting.....");
+	 long t0=System.nanoTime();
+	 System.out.println("Nano Time....."+t0);
+	 ids.parallelStream().sorted().count();
+	 System.out.println("After Parallel Sorting.....");
+	 long t1=System.nanoTime();
+	 System.out.println("Nano Time....."+t1);
+	 System.out.println("Time Taken to parallel sort"+TimeUnit.NANOSECONDS.toMillis(t1 - t0));
+	 
 		
 	}
 
 }
-
