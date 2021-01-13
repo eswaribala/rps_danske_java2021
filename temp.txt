@@ -1,39 +1,82 @@
-public class LocaleDemo {
-
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		//testing different zones		
-		//ZoneId.getAvailableZoneIds().stream().forEach(System.out::println);
-		System.out.println(ZoneId.getAvailableZoneIds().stream().distinct().count());	
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.danske.banking</groupId>
+  <artifactId>loan</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <properties>
+  <logback.version>1.0.13</logback.version>
+		<slf4j.version>1.7.5</slf4j.version>
+  	<log4j.version>1.2.17</log4j.version> 
+  </properties>
+  <dependencies>
+      <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
+	<dependency>
+	    <groupId>org.projectlombok</groupId>
+	    <artifactId>lombok</artifactId>
+	    <version>1.18.16</version>
+	    <scope>provided</scope>
+	</dependency>   
+  
+	  <!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-core -->
+	<dependency>
+	    <groupId>org.hibernate</groupId>
+	    <artifactId>hibernate-core</artifactId>
+	    <version>5.4.27.Final</version>
+	</dependency>
+  
+	  <!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-entitymanager -->
+	<dependency>
+	    <groupId>org.hibernate</groupId>
+	    <artifactId>hibernate-entitymanager</artifactId>
+	    <version>5.4.27.Final</version>
+	</dependency>
+  
+   <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-dbcp2</artifactId>
+      <version>2.1.1</version>
+    </dependency>
+  	<!-- Log4j -->
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>${log4j.version}</version>
+		</dependency>
+		<!-- Logging with SLF4J & LogBack -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${slf4j.version}</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>${logback.version}</version>
+			<scope>runtime</scope>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
+		<dependency>
+		    <groupId>mysql</groupId>
+		    <artifactId>mysql-connector-java</artifactId>
+		    <version>5.1.42</version>
+		</dependency>
 		
-		//Arrays.asList(Locale.getAvailableLocales()).stream().forEach(System.out::println);
-		//currency
-		float amount=76000f;
-		for(Locale locale :Locale.getAvailableLocales())
-		{
-		NumberFormat numberFormatter=NumberFormat.getCurrencyInstance(locale);
-		String moneyFormatter=numberFormatter.format(amount);
-		System.out.println(moneyFormatter);
-		}
-		/*
-		for(String zoneId:ZoneId.getAvailableZoneIds())
-		{
-			ZonedDateTime selectedZoneDateTime=ZonedDateTime.now(ZoneId.of(zoneId));
-			 System.out.println("Selected time zone is " +  
-					 selectedZoneDateTime); 
-
-		 DateTimeFormatter format =  
-		     DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");  
-		   
-		 String formatedDateTime = selectedZoneDateTime.format(format);  
-		
-		 System.out.println("formatted selected time zone "+ 
-		                     formatedDateTime); 
-			
-		}
-		
-		*/
-		
-	}
-
-}
+  
+  </dependencies>
+  
+  
+  <build>
+   <plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+				</configuration>
+			</plugin>
+		</plugins>
+  
+  </build>
+</project>
