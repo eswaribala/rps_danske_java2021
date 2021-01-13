@@ -1,112 +1,87 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>com.danske.banking</groupId>
-  <artifactId>loan</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
-  <properties>
-  <logback.version>1.0.13</logback.version>
-		<slf4j.version>1.7.5</slf4j.version>
-  	<log4j.version>1.2.17</log4j.version> 
-  </properties>
-  <dependencies>
-      <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
-	<dependency>
-	    <groupId>org.projectlombok</groupId>
-	    <artifactId>lombok</artifactId>
-	    <version>1.18.16</version>
-	    <scope>provided</scope>
-	</dependency>   
-  
-	  <!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-core -->
-	<dependency>
-	    <groupId>org.hibernate</groupId>
-	    <artifactId>hibernate-core</artifactId>
-	    <version>5.4.27.Final</version>
-	</dependency>
-  
-	  <!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-entitymanager -->
-	<dependency>
-	    <groupId>org.hibernate</groupId>
-	    <artifactId>hibernate-entitymanager</artifactId>
-	    <version>5.4.27.Final</version>
-	</dependency>
-  
-   <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-dbcp2</artifactId>
-      <version>2.1.1</version>
-    </dependency>
-  	<!-- Log4j -->
-		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>${log4j.version}</version>
-		</dependency>
-		<!-- Logging with SLF4J & LogBack -->
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<version>${slf4j.version}</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-classic</artifactId>
-			<version>${logback.version}</version>
-			<scope>runtime</scope>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
-		<dependency>
-		    <groupId>mysql</groupId>
-		    <artifactId>mysql-connector-java</artifactId>
-		    <version>5.1.42</version>
-		</dependency>
-		
-  
-  </dependencies>
-  
-  
-  <build>
-   <plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
-				</configuration>
-			</plugin>
-		</plugins>
-  
-  </build>
-</project>
-------------------------------------------------------
 
-<persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence
-          http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd"
-    version="2.1">
-     
-    <persistence-unit name="testdb">
-        <properties>
-        <property name="hibernate.dialect" 
-                  value="org.hibernate.dialect.MySQLDialect"/>
-                  <property name="javax.persistence.schema-generation.database.action" value="update"/>
-      <property name="javax.persistence.schema-generation.scripts.action" value="update"/>
-      <property name="javax.persistence.schema-generation.scripts.create-target" value="sampleCreate.ddl"/>
-      <property name="javax.persistence.schema-generation.scripts.drop-target" value="sampleDrop.ddl"/>
-            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/danskedb?useSSL=true" />
-            <property name="javax.persistence.jdbc.user" value="root" />
-            <property name="javax.persistence.jdbc.password" value="vignesh" />
-            <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />
-            <property name="hibernate.show_sql" value="true" />
-            <property name="hibernate.format_sql" value="true" />
-            <property name="hbm2ddl.auto" value="update"/>
-        </properties>
-    </persistence-unit>
-     
-</persistence>
+import java.time.LocalDate;
+import java.util.List;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Entity
+@Table(name="Danske_Customer")
+public class Customer {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="Customer_Id")
+	private long customerId;
+    @Column(name="Name",nullable = false,length = 75)
+	private String name;
+    @Temporal(value = TemporalType.DATE)
+    @Column(name="DOB")
+	private LocalDate dob;
+    @Column(name="Mobile_No")
+	private long mobileNo;
+    //relationship
+    @OneToMany(mappedBy = "customer",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    private List<Loan> loans;
+    
+    
+}
+-------------------------------------------
 
+import java.time.LocalDate;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Entity
+@Table(name="Danske_Loan")
+public class Loan {
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name="Loan_No")
+     private long loanNo;
+	@Column(name="Loan_Type",nullable =false,length = 100)
+     private String loanType;
+	@Column(name="Amount")
+     private long amount;
+	@Column(name="ROI")
+     private float roi;
+	@Column(name="Tenure")
+     private int tenure;
+	@Temporal(value=TemporalType.DATE)
+	@Column(name="Issue_Date")
+	 private LocalDate issueDate;
+	//relationship
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "Customer_Id",nullable = false)
+	private Customer customer;
+}
