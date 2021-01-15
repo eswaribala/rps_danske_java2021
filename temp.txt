@@ -1,4 +1,6 @@
-
+#actuator end points
+management.endpoints.web.exposure.include=*
+management.endpoint.health.show-details=always
 server.port=7070
 spring.datasource.url=jdbc:mysql://localhost:3306/danskedb?useSSL=true
 spring.datasource.username=root
